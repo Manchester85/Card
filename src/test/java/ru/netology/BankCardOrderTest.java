@@ -1,5 +1,6 @@
 package ru.netology;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -15,16 +16,9 @@ class BankCardOrderTest {
     WebDriver driver;
 
     @BeforeAll
-    static void setUpAll() {
-        System.setProperty("webdriver.chrome.driver", "C:\\GRADLE CardSelenium\\build\\tmp\\driver\\chromedriver.exe");
-
-
-    }
-
-        /*@BeforeAll
-        void setupClass() {
+        static void setupClass() {
             WebDriverManager.chromedriver().setup();
-        }*/
+    }
 
     @BeforeEach
     void setupTest() {
@@ -51,7 +45,7 @@ class BankCardOrderTest {
         textFields.get(1).sendKeys("+79253336677");
         driver.findElement(className("checkbox__box")).click();
         driver.findElement(tagName("button")).click();
-        String actualMessage = driver.findElement(cssSelector("order-success")).getText().strip();
+        String actualMessage = driver.findElement(cssSelector("[data-test-id=order-success]")).getText().strip();
         String expectedMessage = "Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.";
         Assertions.assertEquals(expectedMessage, actualMessage, "При отправке заявки произошла ошибка.");
     }
