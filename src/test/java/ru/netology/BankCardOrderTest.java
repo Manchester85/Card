@@ -2,14 +2,13 @@ package ru.netology;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.util.List;
-
-import static org.openqa.selenium.By.*;
+import static org.openqa.selenium.By.cssSelector;
 
 class BankCardOrderTest {
 
@@ -27,6 +26,7 @@ class BankCardOrderTest {
         options.addArguments("--no-sandbox");
         options.addArguments("--headless");
         driver = new ChromeDriver(options);
+
     }
 
     @AfterEach
@@ -39,14 +39,14 @@ class BankCardOrderTest {
     @Test
     void shouldTestV1() {
         driver.get("http://localhost:9999");
-        List<WebElement> textFields = driver.findElements(className("input__control"));
-        textFields.get(0).sendKeys("Ирина Петрова");
-        textFields.get(1).sendKeys("+79253336677");
-        driver.findElement(className("checkbox__box")).click();
-        driver.findElement(tagName("button")).click();
-        String actualMessage = driver.findElement(cssSelector("[data-test-id=order-success]")).getText().strip();
+        WebElement form = driver.findElement(By.cssSelector("[action]"));
+        driver.findElement(cssSelector("[data-test-id=name] input")).sendKeys("Ирина Петрова");
+        driver.findElement(cssSelector("[data-test-id=phone] input")).sendKeys("+79253336677");
+        driver.findElement(cssSelector("[data-test-id=agreement] .checkbox__box")).click();
+        driver.findElement(cssSelector("[role=button]")).click();
+        String actualMessage = driver.findElement(cssSelector("[data-test-id=order-success]")).getText();
         String expectedMessage = "Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.";
-        Assertions.assertEquals(expectedMessage, actualMessage, "При отправке заявки произошла ошибка.");
+        Assertions.assertEquals(expectedMessage, actualMessage.trim(), "При отправке заявки произошла ошибка.");
     }
 
 }
